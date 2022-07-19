@@ -53,6 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   int selectedIndex = 1;
   String dropdownValue = 'One';
+  TextEditingController firstCurrency = TextEditingController();
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -81,26 +82,32 @@ class _MyHomePageState extends State<MyHomePage> {
       //   title: Text(widget.title),
       // ),
       body: Center(
-        child: SizedBox(
+        child: Container(
+          padding: const EdgeInsets.only(top: 60.0),
           height: heightscreen,
           width: double.infinity,
           child: Column(
             children: [
               Container(
+                // color: Colors.blue,
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 4.0,
-                  crossAxisSpacing: 4.0,
+                child: Row(
+                  // shrinkWrap: true,
+                  // crossAxisCount: 2,
+                  // mainAxisSpacing: 1.0,
+                  // crossAxisSpacing: 1.0,
                   // padding: const EdgeInsets.all(0.0),
                   children: <Widget>[
                     DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         value: dropdownValue,
-                        icon: const Icon(Icons.keyboard_arrow_down_outlined),
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down_outlined,
+                          size: 24,
+                        ),
                         // elevation: 50,
-                        style: const TextStyle(color: Colors.deepPurple),
+                        style: const TextStyle(
+                            color: Colors.deepPurple, fontSize: 28),
                         underline: Container(
                           height: 2,
                           color: const Color.fromARGB(255, 0, 0, 0),
@@ -119,12 +126,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         }).toList(),
                       ),
                     ),
+                    const Spacer(),
                     DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         value: dropdownValue,
-                        icon: const Icon(Icons.keyboard_arrow_down_outlined),
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down_outlined,
+                          size: 24,
+                        ),
                         // elevation: 50,
-                        style: const TextStyle(color: Colors.deepPurple),
+                        style: const TextStyle(
+                            color: Colors.deepPurple, fontSize: 28),
                         underline: Container(
                           height: 2,
                           color: const Color.fromARGB(255, 0, 0, 0),
@@ -146,6 +158,34 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
               ),
+              Container(
+                padding:
+                    const EdgeInsets.only(top: 20.0, left: 30.0, right: 30.0),
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: TextFormField(
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        controller: firstCurrency,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                        // decoration: const InputDecoration(
+                        //   icon: Icon(Icons.lock, color: const Color(0xFF994CFC)),
+                        //   // border: InputBorder.none,
+                        // ),
+                      ),
+                    ),
+                    const Spacer(),
+                    Container(
+                        // color: Colors.amber,
+                        // padding: const EdgeInsets.only(top: 10.0),
+                        child: const Text("0", style: TextStyle(fontSize: 28)))
+                  ],
+                ),
+              )
             ],
           ),
           //  Text(
