@@ -56,6 +56,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     double heightscreen = MediaQuery.of(context).size.height;
+    List<int> firstrow = [7, 8, 9];
+    List<int> secondrow = [4, 5, 6];
+    List<int> thirdrow = [1, 2, 3];
+    List<String> lastrow = ["C", "0", "."];
 
     return Scaffold(
       body: Center(
@@ -138,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Container(
                   // padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                  padding: const EdgeInsets.only(top: 30.0, bottom: 20.0),
+                  padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
                   child: Row(
                     children: [
                       Container(
@@ -163,94 +167,142 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   ),
                 ),
-                GridView.count(
-                  primary: false,
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.all(10),
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 3,
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.all(0),
-                      color: Colors.teal[100],
-                      child: Center(
-                        child: const Text("7"),
-                      ),
+                Container(
+                    padding: const EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                      color: Color(0XFFC64595),
+                      borderRadius: BorderRadius.circular(6),
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(0),
-                      color: Colors.teal[200],
-                      child: Center(
-                        child: const Text('8'),
+                    child: Column(children: [
+                      Container(
+                        child: Row(
+                            children: List.generate(firstrow.length, (index) {
+                          return Expanded(
+                              child: Container(
+                            height: 50,
+                            child: ElevatedButton(
+                              child: Text(
+                                firstrow[index].toString(),
+                                style: const TextStyle(fontSize: 28.0),
+                              ),
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  primary: Color(0XFFC64595),
+                                  side: const BorderSide(
+                                    width: 0,
+                                    color: Color(0XFFC64595),
+                                  ),
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.zero))),
+                            ),
+                          ));
+                        })),
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(0),
-                      color: Colors.teal[300],
-                      child: Center(
-                        child: const Text('9'),
+                      Container(
+                        child: Row(
+                            children: List.generate(secondrow.length, (index) {
+                          return Expanded(
+                              child: Container(
+                            height: 50,
+                            child: ElevatedButton(
+                              child: Text(
+                                secondrow[index].toString(),
+                                style: const TextStyle(fontSize: 28.0),
+                              ),
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  primary: Color(0XFFC64595),
+                                  side: const BorderSide(
+                                    width: 0,
+                                    color: Color(0XFFC64595),
+                                  ),
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.zero))),
+                            ),
+                          ));
+                        })),
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(0),
-                      color: Colors.teal[300],
-                      child: Center(
-                        child: const Text('6'),
+                      Container(
+                        child: Row(
+                            children: List.generate(thirdrow.length, (index) {
+                          return Expanded(
+                              child: Container(
+                            height: 50,
+                            child: ElevatedButton(
+                              child: Text(
+                                thirdrow[index].toString(),
+                                style: const TextStyle(fontSize: 28.0),
+                              ),
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  primary: Color(0XFFC64595),
+                                  side: const BorderSide(
+                                    width: 0,
+                                    color: Color(0XFFC64595),
+                                  ),
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.zero))),
+                            ),
+                          ));
+                        })),
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(0),
-                      color: Colors.teal[300],
-                      child: Center(
-                        child: const Text('5'),
+                      Container(
+                        child: Row(
+                            children: List.generate(lastrow.length, (index) {
+                          return Expanded(
+                              child: Container(
+                            height: 50,
+                            child: ElevatedButton(
+                              child: Text(
+                                lastrow[index].toString(),
+                                style: const TextStyle(fontSize: 28.0),
+                              ),
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  primary: Color(0XFFC64595),
+                                  side: const BorderSide(
+                                    width: 0,
+                                    color: Color(0XFFC64595),
+                                  ),
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.zero))),
+                            ),
+                          ));
+                        })),
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(0),
-                      color: Colors.teal[300],
-                      child: Center(
-                        child: const Text('4'),
+                    ])),
+                Container(
+                  margin: EdgeInsets.only(top: 20.0),
+                  width: double.infinity,
+                  child: SizedBox(
+                    height: 60.0,
+                    child: ElevatedButton(
+                      child: Text(
+                        "Konveti",
+                        style: const TextStyle(fontSize: 20.0),
                       ),
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                          primary: Color(0XFFC64595),
+                          side: const BorderSide(
+                            width: 0,
+                            color: Color(0XFFC64595),
+                          ),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.zero))),
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(0),
-                      color: Colors.teal[300],
-                      child: Center(
-                        child: const Text('3'),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(0),
-                      color: Colors.teal[300],
-                      child: Center(
-                        child: const Text('2'),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(0),
-                      color: Colors.teal[300],
-                      child: Center(
-                        child: const Text('1'),
-                      ),
-                    ),
-                  ],
-                )
+                  ),
+                ),
               ],
             ),
-            //  Text(
-            //   '$_counter',
-            //   style: Theme.of(context).textTheme.headline4,
-            // ),
           ),
         ),
         // child:
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
       bottomNavigationBar: BottomNavigationBar(
           backgroundColor: const Color(0XFFEC3496),
           type: BottomNavigationBarType.shifting,
