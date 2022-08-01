@@ -35,21 +35,18 @@ class _MyHomePageState extends State<MyHomePage> {
   int selectedIndex = 1;
   String dropdownOrigin = 'One';
   String dropdownDestination = 'One';
-  TextEditingController firstCurrency = TextEditingController();
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
+  String valueOrigin = "";
+  Color primarycolor = Color(0XFFC64595);
+  TextEditingController originTyped = TextEditingController();
   void _changeIndex(int index) {
     setState(() {
       selectedIndex = index;
+    });
+  }
+
+  void setValueOrigin(val) {
+    setState(() {
+      originTyped.text += val.toString();
     });
   }
 
@@ -145,21 +142,35 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
                   child: Row(
                     children: [
-                      Container(
-                        child: const Text(
-                          "323892",
-                          textDirection: TextDirection.ltr,
-                          style: TextStyle(color: Colors.black, fontSize: 20.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(width: 2.0, color: Colors.white),
-                            bottom: BorderSide(width: 2.0, color: Colors.black),
+                      Flexible(
+                        child: TextFormField(
+                          controller: originTyped,
+                          decoration: InputDecoration(
+                            border: const UnderlineInputBorder(),
+                            labelText: 'Kantite ' + dropdownOrigin,
                           ),
-                          color: Colors.white,
                         ),
                       ),
+                      // Flexible(
+                      //   child: Container(
+                      //     // value enter currency
+                      //     child: Text(
+                      //       valueOrigin.toString(),
+                      //       textDirection: TextDirection.ltr,
+                      //       style: const TextStyle(
+                      //           color: Colors.black, fontSize: 20.0),
+                      //     ),
+                      //     padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                      //     decoration: const BoxDecoration(
+                      //       border: Border(
+                      //         top: BorderSide(width: 2.0, color: Colors.white),
+                      //         bottom:
+                      //             BorderSide(width: 2.0, color: Colors.black),
+                      //       ),
+                      //       color: Colors.white,
+                      //     ),
+                      //   ),
+                      // ),
                       const Spacer(),
                       Container(
                           child:
@@ -170,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Container(
                     padding: const EdgeInsets.all(5.0),
                     decoration: BoxDecoration(
-                      color: Color(0XFFC64595),
+                      color: primarycolor,
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Column(children: [
@@ -185,12 +196,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                 firstrow[index].toString(),
                                 style: const TextStyle(fontSize: 28.0),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                setValueOrigin(firstrow[index]);
+                              },
                               style: ElevatedButton.styleFrom(
-                                  primary: Color(0XFFC64595),
-                                  side: const BorderSide(
+                                  primary: primarycolor,
+                                  side: BorderSide(
                                     width: 0,
-                                    color: Color(0XFFC64595),
+                                    color: primarycolor,
                                   ),
                                   shape: const RoundedRectangleBorder(
                                       borderRadius:
@@ -210,12 +223,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                 secondrow[index].toString(),
                                 style: const TextStyle(fontSize: 28.0),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                setValueOrigin(secondrow[index]);
+                              },
                               style: ElevatedButton.styleFrom(
-                                  primary: Color(0XFFC64595),
-                                  side: const BorderSide(
+                                  primary: primarycolor,
+                                  side: BorderSide(
                                     width: 0,
-                                    color: Color(0XFFC64595),
+                                    color: primarycolor,
                                   ),
                                   shape: const RoundedRectangleBorder(
                                       borderRadius:
@@ -235,12 +250,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                 thirdrow[index].toString(),
                                 style: const TextStyle(fontSize: 28.0),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                setValueOrigin(secondrow[index]);
+                              },
                               style: ElevatedButton.styleFrom(
-                                  primary: Color(0XFFC64595),
-                                  side: const BorderSide(
+                                  primary: primarycolor,
+                                  side: BorderSide(
                                     width: 0,
-                                    color: Color(0XFFC64595),
+                                    color: primarycolor,
                                   ),
                                   shape: const RoundedRectangleBorder(
                                       borderRadius:
@@ -262,10 +279,10 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
-                                  primary: Color(0XFFC64595),
-                                  side: const BorderSide(
+                                  primary: primarycolor,
+                                  side: BorderSide(
                                     width: 0,
-                                    color: Color(0XFFC64595),
+                                    color: primarycolor,
                                   ),
                                   shape: const RoundedRectangleBorder(
                                       borderRadius:
@@ -287,10 +304,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                          primary: Color(0XFFC64595),
-                          side: const BorderSide(
+                          primary: primarycolor,
+                          side: BorderSide(
                             width: 0,
-                            color: Color(0XFFC64595),
+                            color: primarycolor,
                           ),
                           shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.all(Radius.zero))),
