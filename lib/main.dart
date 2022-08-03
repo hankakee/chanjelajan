@@ -1,11 +1,17 @@
+import 'dart:developer';
+
+import 'package:chanjelajan/service/api.dart';
+import 'package:chanjelajan/service/server_config.dart';
 import 'package:flutter/material.dart';
+import 'utils/alerts.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const MainChange());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MainChange extends StatelessWidget {
+  const MainChange({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -31,7 +37,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   int selectedIndex = 1;
   String dropdownOrigin = 'One';
   String dropdownDestination = 'One';
@@ -39,10 +44,20 @@ class _MyHomePageState extends State<MyHomePage> {
   double destinationFound = 0;
   Color primarycolor = Color(0XFFC64595);
   TextEditingController originTyped = TextEditingController();
+
+  late List<String> tabCurrencies = [];
   void _changeIndex(int index) {
     setState(() {
       selectedIndex = index;
     });
+  }
+
+  void getCurrencies() async {
+    List<String> result = await APIService.get(ServerConfig.apiUrl + "symbols");
+    print(result);
+    result == "no"
+        ? setState(() => {tabCurrencies = []})
+        : setState(() => {tabCurrencies = result});
   }
 
   void setValueOrigin(val) {
@@ -66,13 +81,28 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _konveti() {
-    double parsedPriceOrigin = double.parse(originTyped.text);
-    print(parsedPriceOrigin);
-    setState(() {
-      destinationFound = parsedPriceOrigin;
-    });
+  void _konveti(context) {
+    try {
+      Alerts.toast(context, "Danje",
+          "Ou sipoze antre on kantite pou konvesyon an fèt!!");
+      if (originTyped.text == "" || originTyped.text == " ") {
+      } else {
+        double parsedPriceOrigin = double.parse(originTyped.text);
+
+        if (parsedPriceOrigin <= 0) {
+          Alerts.toast(context, "Erè", "Dezole,pa gen konvesyon zero");
+        }
+        print(parsedPriceOrigin);
+        setState(() {
+          destinationFound = parsedPriceOrigin;
+        });
+      }
+    } catch (e) {
+      print("error catched calling api konveti " + e.toString());
+    }
+
     print(destinationFound);
+    getCurrencies();
   }
 
   @override
@@ -121,14 +151,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                       dropdownOrigin = newValue!;
                                     });
                                   },
-                                  items: <String>['One', 'Two', 'Free', 'Four']
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
+                                  items: tabCurrencies.isEmpty
+                                      ? []
+                                      : tabCurrencies
+                                          .map<DropdownMenuItem<String>>(
+                                              (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
                                 ),
                               ),
                               const Spacer(),
@@ -339,7 +371,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 BorderRadius.circular(7.0),
                                             side: const BorderSide(
                                                 color: Color.fromARGB(255, 173, 173, 173))))),
-                                onPressed: _konveti),
+                                onPressed: () {
+                                  _konveti(context);
+                                }),
                           ),
                         ),
                       ],
