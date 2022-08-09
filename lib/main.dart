@@ -3,6 +3,7 @@ import 'package:chanjelajan/service/api.dart';
 import 'package:chanjelajan/service/server_config.dart';
 import 'package:flutter/material.dart';
 import 'utils/alerts.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   late List<String> tabCurrencies = ["HTG", "USD", "CAD"];
   String dropdownOrigin = "";
+  bool loadedCurrencies = false;
   @override
   void initState() {
     getCurrencies();
@@ -232,19 +234,22 @@ class _MyHomePageState extends State<MyHomePage> {
         "ZWL": "Zimbabwean Dollar"
       }
     };
-    print("----------------  final find currencies v7  -----------");
+    print("----------------  final find currencies v8  -----------");
     List<String> newTab = [];
-    var finalresult = Currency.fromJson(testjson);
+    var finalresult = Currency.fromJson(result);
     finalresult.forEach((k, v) => {newTab.add(k)});
-    // print("finalresult");
+    print("finalresult");
     // print(finalresult);
     // print("-----------------------tabCurrencies-----------------");
-    // print(tabCurrencies);
-    // print(newTab);
+    print(tabCurrencies);
+    print(newTab);
     // tabCurrencies = newTab;
+    print("loadedCurrencies");
+    print(loadedCurrencies);
     setState(() {
       tabCurrencies = newTab;
       dropdownOrigin = tabCurrencies[0];
+      loadedCurrencies = true;
     });
   }
 
@@ -309,267 +314,287 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Center(
           child: selectedIndex == 1
-              ? Container(
-                  padding: const EdgeInsets.only(top: 80.0),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    height: heightscreen,
-                    width: double.infinity,
-                    child: Column(
-                      children: [
-                        Container(
-                          // color: Colors.blue,
-                          // padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                          child: Row(
-                            children: <Widget>[
-                              //dropdown search
-                              // dropdown_search
-
-                              // SizedBox(
-                              //   width: 120.0,
-                              //   child: DropdownButton<String>(
-                              //     value: dropdownOrigin,
-                              //     icon: const Icon(
-                              //       Icons.keyboard_arrow_down_outlined,
-                              //       size: 24,
-                              //     ),
-                              //     // elevation: 50,
-                              //     style: const TextStyle(
-                              //         color: Colors.blue, fontSize: 20),
-                              //     items: tabCurrencies
-                              //         .map<DropdownMenuItem<String>>(
-                              //             (String value) {
-                              //       return DropdownMenuItem<String>(
-                              //         value: value,
-                              //         child: Text(value),
-                              //       );
-                              //     }).toList(),
-                              //     onChanged: (String? newValue) {
-                              //       setState(() {
-                              //         dropdownOrigin = newValue!;
-                              //       });
-                              //     },
-                              //   ),
-                              // ),
-
-                              // const Spacer(),
-                              // SizedBox(
-                              //   width: 120,
-                              //   child: DropdownButtonFormField<String>(
-                              //     value: dropdownDestination,
-                              //     icon: const Icon(
-                              //       Icons.keyboard_arrow_down_outlined,
-                              //       size: 28,
-                              //     ),
-                              //     elevation: 50,
-                              //     style: const TextStyle(
-                              //         color: Colors.blue, fontSize: 20),
-                              //     decoration: InputDecoration(
-                              //         enabledBorder: OutlineInputBorder(
-                              //             borderRadius:
-                              //                 BorderRadius.circular(12.0),
-                              //             borderSide: const BorderSide(
-                              //                 width: 2, color: Colors.blue))),
-                              //     onChanged: (String? newValue) {
-                              //       setState(() {
-                              //         dropdownDestination = newValue!;
-                              //       });
-                              //     },
-                              //     items: <String>['One', 'Two', 'Free', 'Four']
-                              //         .map<DropdownMenuItem<String>>(
-                              //             (String value) {
-                              //       return DropdownMenuItem<String>(
-                              //         value: value,
-                              //         child: Text(value),
-                              //       );
-                              //     }).toList(),
-                              //   ),
-                              // ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          // padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                          padding:
-                              const EdgeInsets.only(top: 50.0, bottom: 20.0),
-                          child: Row(
-                            children: [
-                              Flexible(
-                                child: TextFormField(
-                                  showCursor: false,
-                                  readOnly: true,
-                                  controller: originTyped,
-                                  decoration: InputDecoration(
-                                    border: const UnderlineInputBorder(),
-                                    labelText: 'Kantite ' + dropdownOrigin,
+              ? !loadedCurrencies
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: primarycolor,
+                      ),
+                    )
+                  : Container(
+                      padding: const EdgeInsets.only(top: 80.0),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        height: heightscreen,
+                        width: double.infinity,
+                        child: Column(
+                          children: [
+                            Container(
+                              // color: Colors.blue,
+                              // padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                              child: Row(
+                                children: <Widget>[
+                                  //dropdown search
+                                  Expanded(
+                                    child: SizedBox(
+                                      width: 120.0,
+                                      child: DropdownButton<String>(
+                                        value: dropdownOrigin,
+                                        icon: const Icon(
+                                          Icons.keyboard_arrow_down_outlined,
+                                          size: 24,
+                                        ),
+                                        // elevation: 50,
+                                        style: const TextStyle(
+                                            color: Colors.blue, fontSize: 20),
+                                        items: tabCurrencies
+                                            .map<DropdownMenuItem<String>>(
+                                                (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                        onChanged: (String? newValue) {
+                                          setState(() {
+                                            dropdownOrigin = newValue!;
+                                          });
+                                        },
+                                      ),
+                                    ),
                                   ),
-                                ),
+
+                                  // const Spacer(),
+                                  // SizedBox(
+                                  //   width: 120,
+                                  //   child: DropdownButtonFormField<String>(
+                                  //     value: dropdownDestination,
+                                  //     icon: const Icon(
+                                  //       Icons.keyboard_arrow_down_outlined,
+                                  //       size: 28,
+                                  //     ),
+                                  //     elevation: 50,
+                                  //     style: const TextStyle(
+                                  //         color: Colors.blue, fontSize: 20),
+                                  //     decoration: InputDecoration(
+                                  //         enabledBorder: OutlineInputBorder(
+                                  //             borderRadius:
+                                  //                 BorderRadius.circular(12.0),
+                                  //             borderSide: const BorderSide(
+                                  //                 width: 2, color: Colors.blue))),
+                                  //     onChanged: (String? newValue) {
+                                  //       setState(() {
+                                  //         dropdownDestination = newValue!;
+                                  //       });
+                                  //     },
+                                  //     items: <String>['One', 'Two', 'Free', 'Four']
+                                  //         .map<DropdownMenuItem<String>>(
+                                  //             (String value) {
+                                  //       return DropdownMenuItem<String>(
+                                  //         value: value,
+                                  //         child: Text(value),
+                                  //       );
+                                  //     }).toList(),
+                                  //   ),
+                                  // ),
+                                ],
                               ),
-                              const Spacer(),
-                              Container(
-                                  child: Text(destinationFound.toString(),
-                                      style: const TextStyle(fontSize: 28)))
-                            ],
-                          ),
-                        ),
-                        Container(
-                            padding: const EdgeInsets.all(5.0),
-                            decoration: BoxDecoration(
-                              color: primarycolor,
-                              borderRadius: BorderRadius.circular(6),
                             ),
-                            child: Column(children: [
-                              Container(
-                                child: Row(
-                                    children:
-                                        List.generate(firstrow.length, (index) {
-                                  return Expanded(
-                                      child: Container(
-                                    height: 50,
-                                    child: ElevatedButton(
-                                      child: Text(
-                                        firstrow[index].toString(),
-                                        style: const TextStyle(fontSize: 28.0),
+                            Container(
+                              // padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                              padding: const EdgeInsets.only(
+                                  top: 50.0, bottom: 20.0),
+                              child: Row(
+                                children: [
+                                  Flexible(
+                                    child: TextFormField(
+                                      showCursor: false,
+                                      readOnly: true,
+                                      controller: originTyped,
+                                      decoration: InputDecoration(
+                                        border: const UnderlineInputBorder(),
+                                        labelText: 'Kantite ' + dropdownOrigin,
                                       ),
-                                      onPressed: () {
-                                        setValueOrigin(firstrow[index]);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                          primary: primarycolor,
-                                          side: BorderSide(
-                                            width: 0,
-                                            color: primarycolor,
-                                          ),
-                                          shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.zero))),
                                     ),
-                                  ));
-                                })),
-                              ),
-                              Container(
-                                child: Row(
-                                    children: List.generate(secondrow.length,
-                                        (index) {
-                                  return Expanded(
-                                      child: Container(
-                                    height: 50,
-                                    child: ElevatedButton(
-                                      child: Text(
-                                        secondrow[index].toString(),
-                                        style: const TextStyle(fontSize: 28.0),
-                                      ),
-                                      onPressed: () {
-                                        setValueOrigin(secondrow[index]);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                          primary: primarycolor,
-                                          side: BorderSide(
-                                            width: 0,
-                                            color: primarycolor,
-                                          ),
-                                          shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.zero))),
-                                    ),
-                                  ));
-                                })),
-                              ),
-                              Container(
-                                child: Row(
-                                    children:
-                                        List.generate(thirdrow.length, (index) {
-                                  return Expanded(
-                                      child: Container(
-                                    height: 50,
-                                    child: ElevatedButton(
-                                      child: Text(
-                                        thirdrow[index].toString(),
-                                        style: const TextStyle(fontSize: 28.0),
-                                      ),
-                                      onPressed: () {
-                                        setValueOrigin(thirdrow[index]);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                          primary: primarycolor,
-                                          side: BorderSide(
-                                            width: 0,
-                                            color: primarycolor,
-                                          ),
-                                          shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.zero))),
-                                    ),
-                                  ));
-                                })),
-                              ),
-                              Container(
-                                child: Row(
-                                    children:
-                                        List.generate(lastrow.length, (index) {
-                                  return Expanded(
-                                      child: Container(
-                                    height: 50,
-                                    child: ElevatedButton(
-                                      child: Text(
-                                        lastrow[index].toString(),
-                                        style: const TextStyle(fontSize: 28.0),
-                                      ),
-                                      onPressed: () {
-                                        setValueOrigin(lastrow[index]);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                          primary: primarycolor,
-                                          side: BorderSide(
-                                            width: 0,
-                                            color: primarycolor,
-                                          ),
-                                          shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.zero))),
-                                    ),
-                                  ));
-                                })),
-                              ),
-                            ])),
-                        Container(
-                          margin: const EdgeInsets.only(top: 20.0),
-                          width: double.infinity,
-                          child: SizedBox(
-                            height: 60.0,
-                            child: TextButton(
-                                child: const Text(
-                                  "Konveti",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
                                   ),
+                                  const Spacer(),
+                                  Container(
+                                      child: Text(destinationFound.toString(),
+                                          style: const TextStyle(fontSize: 28)))
+                                ],
+                              ),
+                            ),
+                            Container(
+                                padding: const EdgeInsets.all(5.0),
+                                decoration: BoxDecoration(
+                                  color: primarycolor,
+                                  borderRadius: BorderRadius.circular(6),
                                 ),
-                                style: ButtonStyle(
-                                    padding:
-                                        MaterialStateProperty.all<EdgeInsets>(
-                                            const EdgeInsets.all(0)),
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            primarycolor),
-                                    foregroundColor: MaterialStateProperty.all<Color>(
-                                        const Color.fromRGBO(255, 255, 255, 1)),
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(7.0),
-                                            side: const BorderSide(
-                                                color: Color.fromARGB(255, 173, 173, 173))))),
-                                onPressed: () {
-                                  _konveti(context);
-                                }),
-                          ),
+                                child: Column(children: [
+                                  Container(
+                                    child: Row(
+                                        children: List.generate(firstrow.length,
+                                            (index) {
+                                      return Expanded(
+                                          child: Container(
+                                        height: 50,
+                                        child: ElevatedButton(
+                                          child: Text(
+                                            firstrow[index].toString(),
+                                            style:
+                                                const TextStyle(fontSize: 28.0),
+                                          ),
+                                          onPressed: () {
+                                            setValueOrigin(firstrow[index]);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              primary: primarycolor,
+                                              side: BorderSide(
+                                                width: 0,
+                                                color: primarycolor,
+                                              ),
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.zero))),
+                                        ),
+                                      ));
+                                    })),
+                                  ),
+                                  Container(
+                                    child: Row(
+                                        children: List.generate(
+                                            secondrow.length, (index) {
+                                      return Expanded(
+                                          child: Container(
+                                        height: 50,
+                                        child: ElevatedButton(
+                                          child: Text(
+                                            secondrow[index].toString(),
+                                            style:
+                                                const TextStyle(fontSize: 28.0),
+                                          ),
+                                          onPressed: () {
+                                            setValueOrigin(secondrow[index]);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              primary: primarycolor,
+                                              side: BorderSide(
+                                                width: 0,
+                                                color: primarycolor,
+                                              ),
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.zero))),
+                                        ),
+                                      ));
+                                    })),
+                                  ),
+                                  Container(
+                                    child: Row(
+                                        children: List.generate(thirdrow.length,
+                                            (index) {
+                                      return Expanded(
+                                          child: Container(
+                                        height: 50,
+                                        child: ElevatedButton(
+                                          child: Text(
+                                            thirdrow[index].toString(),
+                                            style:
+                                                const TextStyle(fontSize: 28.0),
+                                          ),
+                                          onPressed: () {
+                                            setValueOrigin(thirdrow[index]);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              primary: primarycolor,
+                                              side: BorderSide(
+                                                width: 0,
+                                                color: primarycolor,
+                                              ),
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.zero))),
+                                        ),
+                                      ));
+                                    })),
+                                  ),
+                                  Container(
+                                    child: Row(
+                                        children: List.generate(lastrow.length,
+                                            (index) {
+                                      return Expanded(
+                                          child: Container(
+                                        height: 50,
+                                        child: ElevatedButton(
+                                          child: Text(
+                                            lastrow[index].toString(),
+                                            style:
+                                                const TextStyle(fontSize: 28.0),
+                                          ),
+                                          onPressed: () {
+                                            setValueOrigin(lastrow[index]);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              primary: primarycolor,
+                                              side: BorderSide(
+                                                width: 0,
+                                                color: primarycolor,
+                                              ),
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.zero))),
+                                        ),
+                                      ));
+                                    })),
+                                  ),
+                                ])),
+                            Container(
+                              margin: const EdgeInsets.only(top: 20.0),
+                              width: double.infinity,
+                              child: SizedBox(
+                                height: 60.0,
+                                child: TextButton(
+                                    child: const Text(
+                                      "Konveti",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    style: ButtonStyle(
+                                        padding:
+                                            MaterialStateProperty.all<EdgeInsets>(
+                                                const EdgeInsets.all(0)),
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                primarycolor),
+                                        foregroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                const Color.fromRGBO(
+                                                    255, 255, 255, 1)),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(7.0),
+                                                side: const BorderSide(color: Color.fromARGB(255, 173, 173, 173))))),
+                                    onPressed: () {
+                                      _konveti(context);
+                                    }),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                )
-              : (selectedIndex == 0 ? Text("Lis monen") : Text("Monen"))),
+                      ),
+                    )
+              : (selectedIndex == 0
+                  ? const Text("Lis monen")
+                  : const Text("Monen"))),
       bottomNavigationBar: BottomNavigationBar(
           backgroundColor: const Color(0XFFEC3496),
           type: BottomNavigationBarType.shifting,

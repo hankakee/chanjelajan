@@ -25,8 +25,8 @@ class Currency {
   static Map fromJson(jsonstring) {
     // print(Map.from(jsonstring["symbols"])
     //     .map((k, v) => MapEntry<String, String>(k, v)));
-
-    return Map.from(jsonstring["symbols"]).map((k, v) => MapEntry(k, v));
+    var decodedstr = json.decode(jsonstring);
+    return Map.from(decodedstr["symbols"]).map((k, v) => MapEntry(k, v));
   }
 
   // Map tabCurrencies=fromJson3(jsonmapc);
