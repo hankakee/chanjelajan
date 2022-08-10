@@ -321,7 +321,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     )
                   : Container(
-                      padding: const EdgeInsets.only(top: 80.0),
+                      padding: const EdgeInsets.only(top: 100.0),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         height: heightscreen,
@@ -335,9 +335,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                 children: <Widget>[
                                   //dropdown search
                                   Expanded(
-                                    child: SizedBox(
+                                    child: Container(
                                       width: 120.0,
+                                      // color: Colors.red,
                                       child: DropdownButton<String>(
+                                        underline: const SizedBox(),
                                         value: dropdownOrigin,
                                         icon: const Icon(
                                           Icons.keyboard_arrow_down_outlined,
@@ -345,13 +347,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                         ),
                                         // elevation: 50,
                                         style: const TextStyle(
-                                            color: Colors.blue, fontSize: 20),
+                                            color: Colors.blue, fontSize: 24),
                                         items: tabCurrencies
                                             .map<DropdownMenuItem<String>>(
                                                 (String value) {
                                           return DropdownMenuItem<String>(
                                             value: value,
-                                            child: Text(value),
+                                            child: Text(value,
+                                                textAlign: TextAlign.right),
                                           );
                                         }).toList(),
                                         onChanged: (String? newValue) {
@@ -362,47 +365,47 @@ class _MyHomePageState extends State<MyHomePage> {
                                       ),
                                     ),
                                   ),
-
-                                  // const Spacer(),
-                                  // SizedBox(
-                                  //   width: 120,
-                                  //   child: DropdownButtonFormField<String>(
-                                  //     value: dropdownDestination,
-                                  //     icon: const Icon(
-                                  //       Icons.keyboard_arrow_down_outlined,
-                                  //       size: 28,
-                                  //     ),
-                                  //     elevation: 50,
-                                  //     style: const TextStyle(
-                                  //         color: Colors.blue, fontSize: 20),
-                                  //     decoration: InputDecoration(
-                                  //         enabledBorder: OutlineInputBorder(
-                                  //             borderRadius:
-                                  //                 BorderRadius.circular(12.0),
-                                  //             borderSide: const BorderSide(
-                                  //                 width: 2, color: Colors.blue))),
-                                  //     onChanged: (String? newValue) {
-                                  //       setState(() {
-                                  //         dropdownDestination = newValue!;
-                                  //       });
-                                  //     },
-                                  //     items: <String>['One', 'Two', 'Free', 'Four']
-                                  //         .map<DropdownMenuItem<String>>(
-                                  //             (String value) {
-                                  //       return DropdownMenuItem<String>(
-                                  //         value: value,
-                                  //         child: Text(value),
-                                  //       );
-                                  //     }).toList(),
-                                  //   ),
-                                  // ),
+                                  const Spacer(),
+                                  Expanded(
+                                    child: Container(
+                                      width: 120.0,
+                                      // color: Colors.amber,
+                                      child: DropdownButton<String>(
+                                        value: dropdownOrigin,
+                                        underline: const SizedBox(),
+                                        alignment:
+                                            AlignmentDirectional.bottomEnd,
+                                        icon: const Icon(
+                                          Icons.keyboard_arrow_down_outlined,
+                                          size: 24,
+                                        ),
+                                        // elevation: 50,
+                                        style: TextStyle(
+                                            color: primarycolor, fontSize: 24),
+                                        items: tabCurrencies
+                                            .map<DropdownMenuItem<String>>(
+                                                (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value,
+                                                textAlign: TextAlign.center),
+                                          );
+                                        }).toList(),
+                                        onChanged: (String? newValue) {
+                                          setState(() {
+                                            dropdownOrigin = newValue!;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
                             Container(
                               // padding: const EdgeInsets.symmetric(horizontal: 30.0),
                               padding: const EdgeInsets.only(
-                                  top: 50.0, bottom: 20.0),
+                                  top: 20.0, bottom: 30.0),
                               child: Row(
                                 children: [
                                   Flexible(
