@@ -12,6 +12,7 @@ class APIService {
         },
       );
       if (response.statusCode == 200) {
+        print('Api called brother');
         return response.body;
       } else {
         print("Gen erè ki pase");
