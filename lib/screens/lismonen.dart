@@ -10,30 +10,7 @@ class LisMonen extends StatefulWidget {
 class _LisMonenState extends State<LisMonen> {
   var infoLismonnen = {
     "CUC": "Cuban Convertible Peso",
-    "CUP": "Cuban Peso",
-    "CVE": "Cape Verdean Escudo",
-    "CZK": "Czech Republic Koruna",
-    "DJF": "Djiboutian Franc",
-    "DJF": "Djiboutian Franc",
-    "DJF": "Djiboutian Franc",
-    "DJF": "Djiboutian Franc",
-    "DJF": "Djiboutian Franc",
-    "DJF": "Djiboutian Franc",
-    "DJF": "Djiboutian Franc",
-    "DJF": "Djiboutian Franc",
-    "DJF": "Djiboutian Franc",
-    "DJF": "Djiboutian Franc",
-    "DJF": "Djiboutian Franc",
-    "DJF": "Djiboutian Franc",
-    "DJF": "Djiboutian Franc",
-    "DJF": "Djiboutian Franc",
-    "DJF": "Djiboutian Franc",
-    "DKK": "Danish Krone",
-    "DOP": "Dominican Peso",
-    "DZD": "Algerian Dinar",
-    "EGP": "Egyptian Pound",
-    "ERN": "Eritrean Nakfa",
-    "ETB": "Ethiopian Birr"
+    "CVE": "Cape Verdean Escudo"
   };
   @override
   Widget build(BuildContext context) {
@@ -61,7 +38,7 @@ class _LisMonenState extends State<LisMonen> {
               infoLismonnen.length,
               (index) => Card(
                     child: ListTile(
-                      leading: Icon(Icons.monetization_on_outlined),
+                      leading: const Icon(Icons.monetization_on_outlined),
                       title: Text(
                         infoLismonnen.keys.toString(),
                       ),

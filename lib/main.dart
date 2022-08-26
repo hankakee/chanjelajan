@@ -6,6 +6,7 @@ import 'package:chanjelajan/service/storage.dart';
 import 'package:flutter/material.dart';
 import 'utils/alerts.dart';
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String dropdownDestination = 'One';
   String dropdownOrigin = "";
   bool loadedCurrencies = false;
+  final numberFormat = NumberFormat.currency(locale: 'en_US', symbol: '');
   @override
   void initState() {
     getCurrencies();
@@ -122,6 +124,12 @@ class _MyHomePageState extends State<MyHomePage> {
         originTyped.text += val.toString();
       });
     }
+  }
+
+  void clearFields() {
+    setState(() {
+      destinationFound = 0;
+    });
   }
 
   void _konveti(context) async {
@@ -200,16 +208,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     )
                   : Container(
-                      padding: const EdgeInsets.only(top: 100.0),
+                      padding: const EdgeInsets.only(top: 60.0),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        height: heightscreen,
+                        // height: heightscreen,
                         width: double.infinity,
                         child: Column(
                           children: [
+                            const SizedBox(),
+                            const Spacer(),
                             Container(
-                              // color: Colors.blue,
-                              // padding: const EdgeInsets.symmetric(horizontal: 30.0),
                               child: Row(
                                 children: <Widget>[
                                   //dropdown search
@@ -237,6 +245,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           );
                                         }).toList(),
                                         onChanged: (String? newValue) {
+                                          clearFields();
                                           setState(() {
                                             dropdownOrigin = newValue!;
                                           });
@@ -247,7 +256,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   const Spacer(),
                                   Expanded(
                                     child: Container(
-                                      width: 120.0,
+                                      width: double.infinity,
+                                      alignment: Alignment.centerRight,
                                       // color: Colors.amber,
                                       child: DropdownButton<String>(
                                         value: dropdownDestination,
@@ -271,6 +281,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           );
                                         }).toList(),
                                         onChanged: (String? newValue) {
+                                          clearFields();
                                           setState(() {
                                             dropdownDestination = newValue!;
                                           });
@@ -299,14 +310,19 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
                                   ),
                                   const Spacer(),
-                                  Container(
-                                      child: Text(destinationFound.toString(),
-                                          style: const TextStyle(fontSize: 28)))
+                                  Text(numberFormat.format(destinationFound),
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                          fontSize: 28,
+                                          color: primarycolor,
+                                          fontWeight: FontWeight.bold)),
                                 ],
                               ),
                             ),
                             Container(
                                 padding: const EdgeInsets.all(5.0),
+                                alignment: Alignment.centerRight,
                                 decoration: BoxDecoration(
                                   color: primarycolor,
                                   borderRadius: BorderRadius.circular(6),
@@ -438,7 +454,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ),
                                 ])),
                             Container(
-                              margin: const EdgeInsets.only(top: 20.0),
+                              margin: const EdgeInsets.only(
+                                  top: 20.0, bottom: 20.0),
                               width: double.infinity,
                               child: SizedBox(
                                 height: 60.0,
@@ -476,8 +493,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     )
               : (selectedIndex == 0 ? const LisMonen() : const Text("Monen"))),
       bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: const Color(0XFFEC3496),
-          type: BottomNavigationBarType.shifting,
+          // backgroundColor: const Color(0XFFEC3496),
+          // type: BottomNavigationBarType.shifting,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(
