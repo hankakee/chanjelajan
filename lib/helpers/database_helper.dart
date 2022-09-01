@@ -1,29 +1,39 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart';
 
 class DatabaseHelper {
-  late Database? _db;
+  static final DatabaseHelper instance = DatabaseHelper._init();
+  static Database? _database;
+  DatabaseHelper._init();
 
-  Future<Database> initDb() async {
-    // rekipere chemen nan aparèy la
-    String databasesPath = await getDatabasesPath();
-    return await openDatabase(
-      path.join(databasesPath, 'ecom_app.db'),
-      onCreate: _onCreate,
-      version: 1,
-    );
+  Future<Database> _initDB(String filePath) async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, filePath);
+    return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
-  void _onCreate(Database db, int version) async {
-    Batch batch = db.batch();
-    batch.execute(
-        """CREATE TABLE categories(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
- name TEXT NOT NULL, image TEXT)""");
-    batch.execute(
-        """CREATE TABLE products(id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NUL
- price FLOAT NOT NULL, image TEXT NOT NULL, description TEXT, category INT
- FOREIGN KEY(category) REFERENCES categories(id) 
- ON DELETE NO ACTION ON UPDATE CASCADE)""");
-    await batch.commit();
+  Future<Database> get database async {
+    if (_database != null) return _database!;
+    _database = await _initDB('changerate.db');
+    return _database!;
+  }
+
+  Future _createDB(Database db, int version) async {
+    try {
+      Batch batch = db.batch();
+      batch.execute(
+          """CREATE TABLE moneyconverted(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, datecomplete TEXT NOT NULL,
+           fromqty FLOAT NOT NULL,toqty FLOAT NOT NULL, fromcurrency TEXT NOT NULL,tocurrency TEXT NOT NULL)""");
+      await batch.commit();
+      print("Created with success");
+    } catch (e) {
+      print("e)");
+      print(e);
+    }
+  }
+
+  Future close() async {
+    final db = await instance.database;
+    db.close();
   }
 }

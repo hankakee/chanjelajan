@@ -1,126 +1,84 @@
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
+import '../models/istorik.dart';
+import 'package:skeleton_text/skeleton_text.dart';
+import 'dart:async';
 class Istorikmonen extends StatefulWidget {
   const Istorikmonen({Key? key}) : super(key: key);
-
   @override
   State<Istorikmonen> createState() => _IstorikmonenState();
 }
 
 class _IstorikmonenState extends State<Istorikmonen> {
-  // var infoistorik = {
-  //   "id": 1,
-  //   "datecomplete": "2022-08-26",
-  //   "fromqty": 1,
-  //   "toqty": 1,
-  //   "fromcurrency": 1,
-  //   "tocurrency": 1
-  // };
+ late List<Map<String,dynamic>> historyData;
+ final numberFormat = NumberFormat.currency(locale: 'en_US', symbol: '');
+ bool isLoading=true;
+  @override
+  void initState() {
+    // initializeDateFormatting();
+    // dateFormat = DateFormat.yMMMMd('cs');
+    getHistoryData();
+    super.initState();
+  }
 
-  List<Map<String, dynamic>> historyData = [
-    {
-      "id": 1,
-      "datecomplete": "2022-06-03",
-      "fromqty": 9,
-      "toqty": 31,
-      "fromcurrency": "NZD",
-      "tocurrency": "CNY"
-    },
-    {
-      "id": 2,
-      "datecomplete": "2022-07-07",
-      "fromqty": 70,
-      "toqty": 87,
-      "fromcurrency": "KZT",
-      "tocurrency": "CNY"
-    },
-    {
-      "id": 3,
-      "datecomplete": "2021-10-23",
-      "fromqty": 64,
-      "toqty": 86,
-      "fromcurrency": "CUP",
-      "tocurrency": "CNY"
-    },
-    {
-      "id": 4,
-      "datecomplete": "2022-03-18",
-      "fromqty": 51,
-      "toqty": 86,
-      "fromcurrency": "XOF",
-      "tocurrency": "CNY"
-    },
-    {
-      "id": 5,
-      "datecomplete": "2022-03-03",
-      "fromqty": 16,
-      "toqty": 1,
-      "fromcurrency": "KZT",
-      "tocurrency": "EUR"
-    },
-    {
-      "id": 6,
-      "datecomplete": "2022-03-11",
-      "fromqty": 82,
-      "toqty": 42,
-      "fromcurrency": "IDR",
-      "tocurrency": "CNY"
-    },
-    {
-      "id": 7,
-      "datecomplete": "2021-12-03",
-      "fromqty": 92,
-      "toqty": 17,
-      "fromcurrency": "ARS",
-      "tocurrency": "IDR"
-    },
-    {
-      "id": 8,
-      "datecomplete": "2022-02-19",
-      "fromqty": 97,
-      "toqty": 69,
-      "fromcurrency": "PLN",
-      "tocurrency": "GTQ"
-    },
-    {
-      "id": 9,
-      "datecomplete": "2022-07-11",
-      "fromqty": 2,
-      "toqty": 36,
-      "fromcurrency": "PHP",
-      "tocurrency": "CUP"
-    },
-    {
-      "id": 10,
-      "datecomplete": "2022-01-03",
-      "fromqty": 71,
-      "toqty": 25,
-      "fromcurrency": "TJS",
-      "tocurrency": "CNY"
+  void getHistoryData() async{
+    setState(() => {isLoading=true});
+    List <Istorik> historicdt= await Istorik.getHistoric();
+    List <Map<String, dynamic>> tmpIstorik=[];
+    for (var k = 0; k < historicdt.length; k++) {
+      tmpIstorik.add({
+        "id": historicdt[k].toMap()['id'],
+        "datecomplete":historicdt[k].toMap()['datecomplete'],
+        "fromqty": historicdt[k].toMap()['fromqty'],
+        "toqty":historicdt[k].toMap()['toqty'],
+        "fromcurrency":historicdt[k].toMap()['fromcurrency'],
+        "tocurrency":historicdt[k].toMap()['tocurrency']
+      });
+     // print(historicdt[0].toMap());
     }
-  ];
+    Timer(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() => {historyData = tmpIstorik, isLoading = false});
+      }
+    });
+
+  }
+
 
   // {success: true, query: {from: USD, to: HTG, amount: 10}, info: {timestamp: 1661537045, rate: 126.598354}, date: 2022-08-26, result: 1265.98354}
 // 6 avril 2022
 // 2USD - 240 HTG
   Widget cardCurrencies(dataset) {
+
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
+          // Text(dataset.toString()),
             Container(
                 width: double.infinity,
-                child: Text(dataset['datecomplete'].toString())),
+                child: Text(
+                    DateFormat.yMMMMd()
+                        .format(DateTime.parse(dataset['datecomplete']))+" "+DateFormat.jms().format(DateTime.parse(dataset['datecomplete'])),
+                    style: const TextStyle(
+                        fontSize: 19.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey))),
             Container(
               width: double.infinity,
-              child: Text(dataset['fromqty'].toString() +
-                  " " +
-                  dataset['fromcurrency'] +
-                  "  -  " +
-                  dataset['toqty'].toString() +
-                  " " +
-                  dataset['tocurrency']),
+              child: Text(
+                numberFormat.format(dataset['fromqty']) +
+                      " " +
+                      dataset['fromcurrency'] +
+                      "  -  " +
+                      numberFormat.format(dataset['toqty']) +
+                      " " +
+                      dataset['tocurrency'],
+                  style: TextStyle(
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey)),
             ),
           ],
         ),
@@ -128,30 +86,81 @@ class _IstorikmonenState extends State<Istorikmonen> {
     );
   }
 
+Widget skeletonLoading(){
+  return Container(
+      width: double.infinity,
+      padding:const EdgeInsets.all(10.0),
+      margin:const EdgeInsets.all(10.0),
+      child: Column(children: [
+        Container(
+          margin:const EdgeInsets.only(top:5),
+          alignment: Alignment.centerLeft,
+          child: SkeletonAnimation(
+            shimmerDuration : 5000,
+            borderRadius: BorderRadius.circular(5.0),
+            shimmerColor: const Color(0XFFDEDFE0),
+            child: Container(
+              width: 150.0,
+              height: 15,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5.0),
+                  color: Colors.grey[200]),
+            ),),
+        ),  Container(
+          alignment: Alignment.centerLeft,
+          margin:const EdgeInsets.only(top:5),
+          child: SkeletonAnimation(
+            shimmerDuration : 4000,
+            borderRadius: BorderRadius.circular(10.0),
+            shimmerColor:const Color(0XFFDEDFE0),
+            child: Container(
+              width: 350.0,
+              height: 25,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5.0),
+                  color: Colors.grey[200]),
+            ),),
+        ),
+      ],),color:Colors.grey[50]);
+}
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text(
+        title: const Text(
           "Istorik",
-          style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Colors.black54,
+              fontSize: 28.0,
+              fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          // margin: const EdgeInsets.only(top: 20.0),
-          // color: Colors.red,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            colors: [Color(0xffe91e63), Color(0xff9c27b0)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          )),
-          height: MediaQuery.of(context).size.height * 3,
-          child: Column(
-              children: historyData.map((el) => cardCurrencies(el)).toList()),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          getHistoryData();
+          print("refresh with success");
+        },
+        child: SingleChildScrollView(
+          child: Container(
+            width: double.infinity,
+            margin: const EdgeInsets.only(top: 6.0),
+            color: Colors.white,
+            // decoration: BoxDecoration(
+            //     gradient: LinearGradient(
+            //   colors: [Color(0xffe91e63), Colors.blue],
+            //   begin: Alignment.topLeft,
+            //   end: Alignment.bottomRight,
+            // )),
+            height: MediaQuery.of(context).size.height * 6,
+            child: Column(
+                children:isLoading ? List.generate(10,(index){return skeletonLoading();})
+                    :   historyData.map((el) => cardCurrencies(el)).toList()
+            ),
+          ),
         ),
       ),
     );

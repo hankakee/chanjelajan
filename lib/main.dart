@@ -1,4 +1,5 @@
 import 'package:chanjelajan/models/currencies.dart';
+import 'package:chanjelajan/models/istorik.dart';
 import 'package:chanjelajan/screens/istorik.dart';
 import 'package:chanjelajan/screens/lismonen.dart';
 import 'package:chanjelajan/service/api.dart';
@@ -48,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int selectedIndex = 1;
   String valueOrigin = "";
   double destinationFound = 0;
-  Color primarycolor = Color(0XFFC64595);
+  Color primarycolor = const Color(0XFFC64595);
   TextEditingController originTyped = TextEditingController();
 
   late List<String> tabCurrencies = ["HTG", "USD", "CAD"];
@@ -57,6 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool loadedCurrencies = false;
   final numberFormat = NumberFormat.currency(locale: 'en_US', symbol: '');
   bool isConverting = false;
+  bool firstLoaded=true;
   @override
   void initState() {
     getCurrencies();
@@ -67,9 +69,13 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       selectedIndex = index;
     });
+    clearAllInfo();
   }
 
   void getCurrencies() async {
+    setState(() {
+      loadedCurrencies = false;
+    });
     //find if storage has currencies
     var shopcurrecies = await Storage.storedCurrencies();
     print(shopcurrecies);
@@ -85,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
         dropdownDestination = "HTG";
         loadedCurrencies = true;
       });
+
       return;
     }
     print('Loaded from storage failed,loaded from API');
@@ -132,9 +139,16 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void clearFields() {
+  void clearDestination() {
     setState(() {
       destinationFound = 0;
+    });
+  }
+  void clearAllInfo() {
+    setState(() {
+      destinationFound = 0;
+      originTyped.text = "";
+      firstLoaded=false;
     });
   }
 
@@ -167,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
           });
           return;
         }
-        print(parsedPriceOrigin);
+        // print(parsedPriceOrigin);
         if (dropdownOrigin == "" || dropdownDestination == "") {
           Alerts.toast(context, "Erè",
               "Domaj ou sipoze chwazi monen pou'w konveti'l...Cheke entenèt ou oubyen rale ekran an desan' pou'w rafrechi...");
@@ -176,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
           });
           return;
         } else if (dropdownOrigin == dropdownDestination) {
-          Alerts.toast(context, "", "Ou rechwazi anko wi frem");
+          Alerts.toast(context, "", "Ou rechwazi menm lajan anko wi...");
           setState(() {
             isConverting = false;
             destinationFound = parsedPriceOrigin;
@@ -195,12 +209,23 @@ class _MyHomePageState extends State<MyHomePage> {
               parsedPriceOrigin.toString());
 
           print("from:  " + dropdownOrigin + " to: " + dropdownDestination);
-          print(json.decode(resultConvert));
           var finalConvert = json.decode(resultConvert);
+          print(finalConvert);
+          var dataToSubmit = Istorik(
+              id: 0,
+              datecomplete: DateTime.parse(finalConvert['date']),
+              fromqty: finalConvert['query']['amount'].toDouble(),
+              toqty: finalConvert['result'].toDouble(),
+              fromcurrency: finalConvert['query']['from'],
+              tocurrency: finalConvert['query']['to']);
+          int rs=await Istorik.insertConvert(dataToSubmit);
+          if(rs==0){
+            Alerts.toast(context, "Atansyon",
+                "Atansyon,konvesyon sa pa al nan istorik la...");
+          }
           setState(() {
             isConverting = false;
             destinationFound = finalConvert['result'];
-            print(finalConvert['result']);
           });
         }
       }
@@ -220,7 +245,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     double heightscreen = MediaQuery.of(context).size.height;
-    double widthscreen = MediaQuery.of(context).size.width;
+    // double widthscreen = MediaQuery.of(context).size.width;
     List<int> firstrow = [7, 8, 9];
     List<int> secondrow = [4, 5, 6];
     List<int> thirdrow = [1, 2, 3];
@@ -231,10 +256,10 @@ class _MyHomePageState extends State<MyHomePage> {
           child: selectedIndex == 1
               ? !loadedCurrencies
                   ? Center(
-                      child: CircularProgressIndicator(
-                        color: primarycolor,
-                      ),
-                    )
+                  child: CircularProgressIndicator(
+                    color: primarycolor,
+                  ),
+                 )
                   : SingleChildScrollView(
                       child: Container(
                         height: heightscreen,
@@ -250,8 +275,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 padding: const EdgeInsets.only(top: 10.0),
                                 child: SizedBox(
                                     height: heightscreen / 3,
-                                    child:
-                                        Image.asset("assets/creditassets.gif")),
+                                    child:firstLoaded?Image.asset("assets/creditassets.gif"):Image.asset("assets/finalcredit.png")),
                               ),
                               // const Spacer(),
                               Container(
@@ -282,7 +306,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             );
                                           }).toList(),
                                           onChanged: (String? newValue) {
-                                            clearFields();
+                                            clearDestination();
                                             setState(() {
                                               dropdownOrigin = newValue!;
                                             });
@@ -290,7 +314,23 @@ class _MyHomePageState extends State<MyHomePage> {
                                         ),
                                       ),
                                     ),
-                                    const Spacer(),
+                                    Expanded(
+                                      child:Container(
+                                        child:IconButton(
+                                          // splashColor: Colors.red,
+                                          icon: const Icon(Icons.compare_arrows),
+                                          color: Colors.grey,
+                                          iconSize: 35.0,
+                                          onPressed: () {
+                                          String swaporigin=dropdownOrigin;
+                                          String swapdestination=dropdownDestination;
+                                            setState((){
+                                              dropdownDestination= swaporigin;
+                                              dropdownOrigin=swapdestination;
+                                            });
+                                            },
+                                        ),
+                                    ),),
                                     Expanded(
                                       child: Container(
                                         width: double.infinity,
@@ -319,7 +359,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             );
                                           }).toList(),
                                           onChanged: (String? newValue) {
-                                            clearFields();
+                                            clearDestination();
                                             setState(() {
                                               dropdownDestination = newValue!;
                                             });
@@ -369,16 +409,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                   child: Column(children: [
                                     Container(
                                       child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: List.generate(
                                               firstrow.length, (index) {
                                         return Expanded(
                                             child: Container(
-                                          height: 50,
+                                          height: 55,
                                           child: ElevatedButton(
                                             child: Text(
                                               firstrow[index].toString(),
                                               style: const TextStyle(
-                                                  fontSize: 28.0),
+                                                  fontSize: 28.0, fontWeight: FontWeight.bold),
                                             ),
                                             onPressed: () {
                                               setValueOrigin(firstrow[index]);
@@ -392,8 +433,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 shape:
                                                     const RoundedRectangleBorder(
                                                         borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.zero))),
+                                                            BorderRadius.all( Radius.circular(5.0)))),
                                           ),
                                         ));
                                       })),
@@ -462,18 +502,19 @@ class _MyHomePageState extends State<MyHomePage> {
                                         ));
                                       })),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       child: Row(
                                           children: List.generate(
-                                              lastrow.length, (index) {
+                                              lastrow.length,(index) {
                                         return Expanded(
                                             child: Container(
                                           height: 53,
                                           child: ElevatedButton(
                                             child: Text(
                                               lastrow[index].toString(),
-                                              style: const TextStyle(
-                                                  fontSize: 28.0,
+                                              style: TextStyle(
+                                                  fontSize:28.0,
+                                                  color:lastrow[index]=="C" ? Colors.red : Colors.white,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             onPressed: () {
@@ -548,7 +589,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           child: const Text(
                                             "Konveti",
                                             style: TextStyle(
-                                              fontSize: 18,
+                                              fontSize: 22,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -602,7 +643,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Icons.change_circle_outlined,
                 size: 28,
               ),
-              label: 'monnen',
+              label: 'istorik',
             ),
           ],
           selectedItemColor: const Color(0XFFEC3496),
