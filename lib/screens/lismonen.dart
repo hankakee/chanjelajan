@@ -30,6 +30,7 @@ class _LisMonenState extends State<LisMonen> {
    @override
     void initState(){
       getCurrencies();
+      super.initState();
     }
 
 
@@ -38,11 +39,11 @@ class _LisMonenState extends State<LisMonen> {
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
-          children: [
-            Container(
+          children:const [
+             SizedBox(
                 width: double.infinity,
                 child: Text("USD",
-                    style: const TextStyle(
+                    style:  TextStyle(
                         fontSize: 19.0,
                         fontWeight: FontWeight.bold,
                         color: Colors.grey))),
@@ -123,11 +124,23 @@ class _LisMonenState extends State<LisMonen> {
         onRefresh: ()async {
           getCurrencies();
         },
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
           height: MediaQuery.of(context).size.height,
           child: ListView(
-            children:isLoading?List.generate(10,(index){return skeletonLoading();}): List.generate(
+            children:isLoading?List.generate(10,(index){return skeletonLoading();}): monenyo.isEmpty ?List.generate(
+                1,
+                    (index) => const Center(
+              child: ListTile(
+                title:const Text(
+                  "Poko gen lajan ki konvèti!!!",
+                  style:  TextStyle(
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey),
+                ),
+              ),
+            )):List.generate(
                 monenyo.length,
                 (index) => Card(
                       child: Padding(

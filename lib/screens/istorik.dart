@@ -158,7 +158,19 @@ Widget skeletonLoading(){
             height: MediaQuery.of(context).size.height * 6,
             child: Column(
                 children:isLoading ? List.generate(10,(index){return skeletonLoading();})
-                    :   historyData.map((el) => cardCurrencies(el)).toList()
+                    : historyData.isEmpty ? List.generate(
+                    1,
+                        (index) => const Center(
+                      child: ListTile(
+                        title:const Text(
+                          "Poko gen lajan ki konvèti!!!",
+                          style:  TextStyle(
+                              fontSize: 22.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                        ),
+                      ),
+                    )) :  historyData.map((el) => cardCurrencies(el)).toList()
             ),
           ),
         ),
